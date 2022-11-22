@@ -1,0 +1,94 @@
+[data-href] {
+  cursor: pointer;
+}
+
+audio {
+  max-height: 100%;
+  max-width: 100%;
+  margin: auto;
+  object-fit: contain;
+}
+
+.logobanner {
+    font-size: 10vw;
+}
+
+.title {
+  font-size: 2vw;
+  text-align: left;
+}
+
+.subtitle {
+  text-align: left;
+}
+
+.big-title {
+  font-size: 3vw;
+  text-align: center;
+}
+
+.main-symbol {
+  font-size: 4vw;
+}
+
+.radical-button {
+  margin: 5px;
+  align-items: center;
+  display: inline-flex;
+}
+
+.strokes
+{
+  height: 15vw;
+  overflow: visible;
+}
+
+#sorted_kana, #sorted_kanjigrade, #sorted_strokes, #svgblack {
+  display: block;
+}
+
+/* Initially hidden content revealed while doing reviews or calling other data */
+#reveal, #finished, #again, #gotit, #studyid,
+#hiddenreading, #hiddenaudio, #hiddenbuttons,
+#sorted_jlpt, #sorted_grade, #settings, #katakana-study,
+#svgblackstrokes, #svgcolor, #svgcolorstrokes,  #review-title1, #review-field1,
+#review-field2, #review-field3, #review-field4, #review-field5,
+#ef-0, #ef-1, #ef-2, #ef-3, #ef-4, #ef-5, #ef-exp, #review-audio {
+  display: none;
+}
+
+.invisible-separation {
+  visibility: hidden;
+}
+
+.toggle-buttons {
+  border-radius: 0;
+}
+
+.floating-label {
+  text-align: left;
+  font-size: smaller;
+  color: gray;
+}
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+/* Setting the size for some fields to make going through different sizes of data more pleasant */
+.infofieldbig {
+  height: 6vw;
+}
+
+.infofieldsmall {
+  height: 5vw;
+}
+
+.infofieldgiant {
+  min-height: 8vw;
+}
