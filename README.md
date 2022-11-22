@@ -1,4 +1,4 @@
-# Yes, you KANJI!
+# Yes, you KANJI! - CS50x 2022 Final Project
 ### Video Demo:  https://www.youtube.com/watch?v=LDyY9wfDZpc
 
 ## **1. About "Yes, you KANJI!"**
