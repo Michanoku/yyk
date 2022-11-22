@@ -1,0 +1,202 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Radical
+{% endblock %}
+
+{% block head %}
+    Radical: {{ radical }}
+{% endblock %}
+
+{% block main %}
+  <div class="row text-center">
+    <div class="col-sm-4 container-fluid">
+      <div class="card" style="width: 30vw;">
+        <h6 class="floating-label">No: {{ info[0][0] }}</h6>
+        <div class="card-body">
+           <h5 class="card-title main-symbol">{{ radical }}</h5>
+             <ul class="list-group list-group-flush">
+            <li class="list-group-item">{{ info[0][3] }}</li>
+            <li class="list-group-item"><h6 class="floating-label">Name</h6>{{ info[0][2] }}</li>
+            <li class="list-group-item"><h6 class="floating-label">Group</h6>{{ info[0][4] }}</li>
+            <li class="list-group-item"><h6 class="floating-label">Strokes</h6>{{ info[0][5] }}</li>
+            <li class="list-group-item"><h6 class="floating-label">All variations</h6>{{ info[0][1] }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-8">
+      {% if kanji|length > 0 %}
+        <div id="sorted_strokes">
+          <p>
+            <div class="title">Kanji for this radical</div>
+            <div class="subtitle">Toggle kanji by stroke count</div>
+          </p>
+          <p>
+            {% for i in kanjistrokes %}
+              <button id="stroke{{ i[0] }}" class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ i[0] }}" aria-expanded="false" aria-controls="collapse{{ i[0] }}" disabled>
+                {{ i[0] }}
+              </button>
+            {% endfor %}
+            <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse-strokes"  aria-expanded="false" aria-controls="{% for i in kanjistrokes %}collapse{{ i[0] }}{% endfor %}">All</button>
+          </p>
+          <table class="table table-responsive" style="width: 100%">
+            <thead>
+              <tr>
+                <th style="width: 20%" scope="col">Number</th>
+                <th style="width: 40%" scope="col">Kanji</th>
+                <th style="width: 20%" scope="col">Grade</th>
+                <th style="width: 20%" scope="col">JLPT</th>
+              </tr>
+            </thead>
+          </table>
+          {% for i in kanjistrokes %}
+            <div class="collapse multi-collapse-strokes" id="collapse{{ i[0] }}">
+              <table class="table table-responsive" style="width: 100%">
+                <thead>
+                  <tr>
+                    <th style="width: 100%" colspan="4">{{ i[0] }} strokes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for j in range(kanji|length) %}
+                    {% if kanji[j][2] == i[0] %}
+                      <tr>
+                        <td style="width: 20%">{{ kanji[j][0] }}</td>
+                        <td style="width: 40%">
+                          <form action="/kanji" method="post"><input type="submit" name="kanji" value="{{ kanji[j][1] }}" class="btn btn-outline-dark"></form>
+                        </td>
+                        <td style="width: 20%">{{ kanji[j][3] }}</td>
+                        <td style="width: 20%">{% if kanji[j][4] > 0 %}N{{ kanji[j][4] }}{% else %}NA{% endif %}</td>
+                      </tr>
+                    {% endif %}
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% endfor %}
+        </div>
+        <div id="sorted_grade">
+          <p>
+            <div class="title">Kanji for this radical</div>
+            <div class="subtitle">Toggle kanji by grade</div>
+          </p>
+          <p>
+            {% for i in kanjigrade %}
+              <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapsegrade{{ i[0] }}" aria-expanded="false" aria-controls="collapsegrade{{ i[0] }}">
+                {{ i[0] }}
+              </button>
+            {% endfor %}
+            <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse-grade"  aria-expanded="false" aria-controls="{% for i in kanjigrade %}collapsegrade{{ i[0] }}{% endfor %}">All</button>
+          </p>
+          <table class="table table-responsive" style="width: 100%">
+            <thead>
+              <tr>
+                <th style="width: 20%" scope="col">Number</th>
+                <th style="width: 40%" scope="col">Kanji</th>
+                <th style="width: 20%" scope="col">Grade</th>
+                <th style="width: 20%" scope="col">JLPT</th>
+              </tr>
+            </thead>
+          </table>
+          {% for i in kanjigrade %}
+            <div class="collapse multi-collapse-grade" id="collapsegrade{{ i[0] }}">
+              <table class="table table-responsive" style="width: 100%">
+                <thead>
+                  <tr>
+                    <th style="width: 100%" colspan="4">Grade {{ i[0] }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for j in range(kanji|length) %}
+                    {% if kanji[j][3] == i[0] %}
+                      <tr>
+                        <td style="width: 20%">No: {{ kanji[j][0] }}</td>
+                        <td style="width: 40%">
+                          <form action="/kanji" method="post"><input type="submit" name="kanji" value="{{ kanji[j][1] }}" class="btn btn-outline-dark"></form>
+                        </td>
+                        <td style="width: 20%">Grade {{ kanji[j][3] }}</td>
+                        <td style="width: 20%">{% if kanji[j][4] > 0 %}JLPT N{{ kanji[j][4] }}{% else %}NA{% endif %}</td>
+                      </tr>
+                    {% endif %}
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% endfor %}
+        </div>
+        <div id="sorted_jlpt">
+          <p>
+            <div class="title">Kanji for this radical</div>
+            <div class="subtitle">Toggle kanji by JLPT</div>
+          </p>
+          <p>
+            {% for i in kanjijlpt %}
+              <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ i[0] }}" aria-expanded="false" aria-controls="collapse{{ i[0] }}">
+                {% if i[0] > 0 %}N{{ i[0] }}{% else %}NA{% endif %}
+              </button>
+            {% endfor %}
+            <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse-jlpt"  aria-expanded="false" aria-controls="{% for i in kanjistrokes %}collapse{{ i[0] }}{% endfor %}">All</button>
+          </p>
+          <table class="table table-responsive" style="width: 100%">
+            <thead>
+              <tr>
+                <th style="width: 20%" scope="col">Number</th>
+                <th style="width: 40%" scope="col">Kanji</th>
+                <th style="width: 20%" scope="col">Grade</th>
+                <th style="width: 20%" scope="col">JLPT</th>
+              </tr>
+            </thead>
+          </table>
+          {% for i in kanjijlpt %}
+            <div class="collapse multi-collapse-jlpt" id="collapse{{ i[0] }}">
+              <table class="table table-responsive" style="width: 100%">
+                <thead>
+                  <tr>
+                    <th style="width: 100%" colspan="4">{% if i[0] > 0 %}JLPT N{{ i[0] }}{% else %}NA{% endif %}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for j in range(kanji|length) %}
+                    {% if kanji[j][4] == i[0] %}
+                      <tr>
+                        <td style="width: 20%">No: {{ kanji[j][0] }}</td>
+                        <td style="width: 40%">
+                          <form action="/kanji" method="post"><input type="submit" name="kanji" value="{{ kanji[j][1] }}" class="btn btn-outline-dark"></form>
+                        </td>
+                        <td style="width: 20%">Grade {{ kanji[j][3] }}</td>
+                        <td style="width: 20%">{% if kanji[j][4] > 0 %}JLPT N{{ kanji[j][4] }}{% else %}NA{% endif %}</td>
+                      </tr>
+                    {% endif %}
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% endfor %}
+        </div>
+        <div class="btn-group" role="group" aria-label="Basic outlined example">
+          Sort by:&nbsp;
+          <button onclick="sortStrokes()" id="strokesort" class="btn toggle-buttons btn-sm btn-outline-secondary text-nowrap">Strokes</button>
+          <button onclick="sortGrade()" id="gradesort" class="btn toggle-buttons btn-sm btn-outline-secondary text-nowrap">Grade</button>
+          <button onclick="sortJlpt()" id="jlptsort" class="btn toggle-buttons btn-sm btn-outline-secondary text-nowrap">JLPT</button>
+        </div>
+      {% else %}
+        <p class="title">No kanji for this radical in YYK</p>
+      {% endif %}
+    </div>
+  </div>
+  <script>
+
+    window.addEventListener('load', (event) => {
+      document.getElementById('strokesort').removeAttribute('disabled');
+      document.getElementById('gradesort').removeAttribute('disabled');
+      document.getElementById('jlptsort').removeAttribute('disabled');
+      for (var j = 1; j < 30; j++) {
+        if (document.getElementById('stroke' + j) == null) { continue; }
+        document.getElementById('stroke' + j).removeAttribute('disabled');
+      }
+      
+    });
+
+  </script>
+{% endblock %}

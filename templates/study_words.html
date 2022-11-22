@@ -1,0 +1,181 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  Study words
+{% endblock %}
+
+{% block head %}
+  New word
+{% endblock %}
+
+{% block main %}
+  {% if wordstudy == "yes" %}
+    <h6 id="studyid">{{ first[0][0] }}</h6>
+    <div id="finished" class="text-center">
+      <p class="logobanner">All done.</p>
+      <p>
+        <h4>Back to:</h4>
+      </p>
+      <p>
+        <a href="/" class="btn btn-lg btn-outline-primary">Home</a>
+        <a href="/study" class="btn btn-lg btn-outline-primary">Study</a>
+      </p>
+    </div>
+    <div id="everything">
+      <div class="text-center">
+        <div style="align-items: center; display: inline-flex;">
+          <div class="card" style="width: 40vw;">
+            <h6 class="floating-label">Expression</h6>
+            <div class="card-body">
+              <h5 class="card-title main-symbol" id="title1">{{ first[0][2] }}</h5>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item infofieldbig">
+                  <h6 class="floating-label">Listen</h6>
+                  <audio id="audio" controls src="{{ sayit(text=first[0][3], lang='ja')}}"></audio>
+                </li>
+                <li class="list-group-item infofieldsmall">
+                  <h6 class="floating-label">Reading</h6>
+                  <p id="field1">{{ first[0][3] }}</p>
+                </li>
+                <li class="list-group-item infofieldgiant">
+                  <h6 class="floating-label">Meaning</h6>
+                  <p id="field2">{{ first[0][4] }}</p>
+                </li>
+                <li class="list-group-item infofieldsmall"><h6 class="floating-label">JLPT</h6>
+                  <p id="field3">
+                    {% if first[0][5]|int > 0 %}
+                      {{ first[0][5] }}
+                    {% else %}
+                      NA
+                    {% endif %}
+                  </p>
+                </li>
+                <li class="list-group-item">
+                  <button type="button" class="btn btn-sm btn-outline-dark radical-button" id="reveal" onclick="reveal()" style="font-size: 2vw">
+                    Reveal
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-primary radical-button" id="next" onclick="getData('0', 'next')" style="font-size: 2vw" disabled>
+                    Next
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary radical-button" id="again" onclick="getData('0', 'again')" style="font-size: 2vw">
+                    Again
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-success radical-button" id="gotit" onclick="getData('0', 'gotit')" style="font-size: 2vw">
+                    Got it
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+
+      window.addEventListener('load', (event) => {
+        document.getElementById('next').removeAttribute('disabled');
+      });
+
+      function reveal() {
+        document.getElementById('again').removeAttribute('disabled');
+        document.getElementById('gotit').removeAttribute('disabled');
+        document.getElementById('again').style.display = "inline";
+        document.getElementById('gotit').style.display = "inline";
+        for (var j = 1; j < 4; j++) {
+          document.getElementById('field' + j).style.display = "inline";
+        }
+
+        document.getElementById('audio').style.display = "inline";
+        document.getElementById('reveal').style.display = "none";
+      }
+
+      var toStudy = [];
+      var counter = 0;
+      var second = 0;
+
+      function getData(listNo, action) {
+        counter = counter + 1;
+        var id = parseInt(document.getElementById("studyid").innerHTML);
+        if (counter == {{ max }}) {
+          counter = 0;
+          second = 1;
+        }
+
+        if (action == "next") {
+          document.getElementById('next').setAttribute("disabled", "");
+          toStudy.push("");
+        }
+        else if (action == "gotit") {
+          document.getElementById('gotit').setAttribute("disabled", "");
+          document.getElementById('again').setAttribute("disabled", "");
+          toStudy[id] = "ok";
+        }
+        else {
+          document.getElementById('gotit').setAttribute("disabled", "");
+          document.getElementById('again').setAttribute("disabled", "");
+        }
+
+        let url = "/study_words";
+        let data = { "number": listNo, "okcheck": toStudy, "max": {{ max }}, "studylist": {{ studylist|tojson }}};
+        fetch(url, {
+          "method": "POST",
+          "headers": {"Content-Type": "application/json"},
+          "body": JSON.stringify(data),
+        }).then(response => response.json())
+        .then(data => {
+          console.log(data);
+          if (data == "done") {
+            document.getElementById('everything').style.display = "none";
+            document.getElementById('finished').style.display = "block";
+          }
+
+          if (second == 1) {
+            document.getElementById('next').style.display = "none";
+            document.getElementById('again').style.display = "none";
+            document.getElementById('gotit').style.display = "none";
+            for (var j = 1; j < 4; j++) {
+              document.getElementById('field' + j).style.display = "none";
+            }
+
+            document.getElementById('audio').style.display = "none";
+            document.getElementById('reveal').style.display = "inline";
+          }
+
+          document.getElementById('title1').innerHTML = data[2];
+          document.getElementById('field1').innerHTML = data[3];
+          document.getElementById('field2').innerHTML = data[4];
+
+          if (parseInt(data[6]) > 0) {
+            document.getElementById('field3').innerHTML = data[6];
+          }
+          else {
+            document.getElementById('field3').innerHTML = "NA";
+          }
+
+          document.getElementById('audio').setAttribute('src', data[7]);
+          document.getElementById('studyid').innerHTML = data[0];
+          if (second == 0) {
+            let nextData = "getData('" + data[0] + "', 'next')";
+            document.getElementById('next').setAttribute("onclick", nextData);
+          }
+          else {
+            let againData = "getData('" + data[0] + "', 'again')";
+            document.getElementById('again').setAttribute("onclick", againData);
+            let gotItData = "getData('" + data[0] + "', 'gotit')";
+            document.getElementById('gotit').setAttribute("onclick", gotItData);
+          }
+
+          document.getElementById('next').removeAttribute('disabled');
+        })
+        
+        .catch((err) => console.log("Access failed: " + url + " Reason: " + err));
+      }
+    </script>
+  {% elif wordstudy == "no" and words == "yes" %}
+    <p class="title text-center">No new words for now. There are new words remaining in the next session.</p>
+  {% elif wordstudy == "no" and words == "no" and kanjistudy == "yes" %}
+    <p class="title text-center">No new words for now. Please study remaining new kanji first.</p>
+  {% else %}
+    <p class="title text-center">Nothing more to study today.</p>
+  {% endif %}
+{% endblock %}

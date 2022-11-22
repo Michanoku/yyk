@@ -1,0 +1,108 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  Review {{ syllabary }}
+{% endblock %}
+
+{% block head %}
+  Review {{ syllabary }}
+{% endblock %}
+
+{% block main %}
+  <div class="card kana-card center" style="width: 50%">
+    <div class="card-body">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <h5 id="cardtitle" class="card-title text-center" style="font-size: 10vw">
+            {{ card[0] }}
+          </h5>
+        </li>
+        <li class="list-group-item text-center" style="min-height: 9vw">
+          <div id="answer1">
+            <h6 id="labelrom" class="floating-label">Romaji</h6>
+          </div>
+            <div id="hiddenreading">
+              <p id="cardroman" class="card-text" style="font-size: 4vw">{{ card[1] }}</p>
+            </div>
+          </li>
+        <li class="list-group-item text-center" style="min-height: 7vw">
+          <h6 id="labellis" class="floating-label">Listen</h6>
+          <div id="hiddenaudio">
+            <audio id="cardaudio" controls src="static/mp3/{{ card[2] }}.mp3" type="audio/mpeg"></audio>
+          </div>
+        </li>
+        <li class="list-group-item text-center" style="min-height: 6vw">
+          <div class="d-grid gap-2 d-md-block">
+            <button id="revealbutton" class="btn btn-outline-dark" style="font-size: 2vw;" onclick="reveal()" disabled>Reveal</button>
+            <div id="hiddenbuttons">
+              <button type="button" class="btn btn-outline-secondary radical-button" id="nexti" style="font-size: 2vw;" onclick="getData(1, 'incorrect')" disabled>Incorrect</button>
+              <button type="button" class="btn btn-outline-success radical-button" id="nextc" style="font-size: 2vw;" onclick="getData(1, 'correct')" disabled>Correct</button>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <script>
+
+    window.addEventListener('load', (event) => {
+      document.getElementById('nextc').removeAttribute('disabled');
+      document.getElementById('nexti').removeAttribute('disabled');
+      document.getElementById('revealbutton').removeAttribute('disabled');
+    });
+
+    var counter = 0;
+
+    function reveal() {
+      document.getElementById("hiddenreading").style.display = "inline";
+      document.getElementById("hiddenaudio").style.display = "inline";
+      document.getElementById("hiddenbuttons").style.display = "inline";
+      document.getElementById("revealbutton").style.display = "none";
+    }
+
+    function getData(cardNo, answer) {
+      document.getElementById('nextc').setAttribute('disabled', '');
+      document.getElementById('nexti').setAttribute('disabled', '');
+      if (answer == 'correct') {
+        counter++;
+      }
+
+      let url = "/kana_review";
+      let data = { "number": cardNo, "style": "{{ syllabary }}", "kana": {{ kana|tojson }}};
+
+      fetch(url, {
+        "method": "POST",
+        "headers": {"Content-Type": "application/json"},
+        "body": JSON.stringify(data),
+      }).then(response => response.json())
+      .then(data => {
+        console.log(data);
+        if (data["number"] == "107") {
+          document.getElementById('nextc').setAttribute('disabled', '');
+          document.getElementById('nexti').setAttribute('disabled', '');
+          document.getElementById("hiddenaudio").style.display = "none";
+          document.getElementById('labelrom').innerHTML = "";
+          document.getElementById('labellis').innerHTML = "";
+          document.getElementById('cardtitle').innerHTML = "Finish!";
+          document.getElementById('cardroman').innerHTML = "Correct: " + counter + " out of 106.";
+        }
+        else {
+          document.getElementById('nextc').setAttribute('onclick', data["correct"]);
+          document.getElementById('nexti').setAttribute('onclick', data["incorrect"]);
+          document.getElementById('cardtitle').innerHTML = data["kana"];
+          document.getElementById("revealbutton").style.display = "inline";
+          document.getElementById("hiddenreading").style.display = "none";
+          document.getElementById("hiddenaudio").style.display = "none";
+          document.getElementById("hiddenbuttons").style.display = "none";
+          document.getElementById('cardroman').innerHTML = data["romaji"];
+          document.getElementById('cardaudio').setAttribute('src', data["audio"]);
+        }
+        document.getElementById('nextc').removeAttribute('disabled');
+        document.getElementById('nexti').removeAttribute('disabled');
+      })
+
+      .catch((err) => console.log("Access failed: " + url + " Reason: " + err));
+    }
+
+  </script>
+{% endblock %}

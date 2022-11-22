@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  Kanji overview
+{% endblock %}
+
+{% block head %}
+  Kanji
+{% endblock %}
+
+{% block main %}
+  <div class="text-center">
+    Sort by:&nbsp;
+    <div class="btn-group btn-group-toggle" data-toggle="buttons" role="group" aria-label="Basic outlined example">
+      <button onclick="toggleGrade()" id="gradebutton" data-toggle="button" class="btn toggle-buttons btn-sm btn-outline-secondary text-nowrap" disabled>
+        Grade
+      </button>
+      <button onclick="toggleKanjiJlpt()" id="jlptbutton" data-toggle="button" class="btn toggle-buttons btn-sm btn-outline-secondary text-nowrap" disabled>
+        JLPT
+      </button>
+    </div>
+  </div>
+  <div class="container-fluid" id="sorted_kanjigrade">
+    <table class="table table-responsive table-hover w-75 m-auto">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Kanji</th>
+          <th scope="col">On-yomi</th>
+          <th scope="col">Kun-yomi</th>
+          <th scope="col">Meaning</th>
+          <th scope="col">Grade</th>
+          <th scope="col">JLPT</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for characters in grade %}
+          <tr>
+            <th scope="row">{{ characters[0] }}</th>
+            <td>
+              <form action="/kanji" method="post">
+                <input type="submit" name="kanji" value="{{ characters[1] }}" class="btn btn-outline-dark btn-sm text-nowrap">
+              </form>
+            </td>
+            <td>{{ characters[2] }}</td>
+            <td>{{ characters[3] }}</td>
+            <td>{{ characters[4] }}</td>
+            <td>{{ characters[5] }}</td>
+            <td>{% if characters[6] > 0 %}N{{ characters[6] }}{% else %}NA{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="container-fluid" id="sorted_jlpt">
+    <table class="table table-responsive table-hover w-75 m-auto">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Kanji</th>
+          <th scope="col">On-yomi</th>
+          <th scope="col">Kun-yomi</th>
+          <th scope="col">Meaning</th>
+          <th scope="col">Grade</th>
+          <th scope="col">JLPT</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for characters in jlpt %}
+          <tr>
+            <th scope="row">{{ characters[0] }}</th>
+            <td>
+              <form action="/kanji" method="post">
+                <input type="submit" name="kanji" value="{{ characters[1] }}" class="btn btn-outline-dark btn-sm text-nowrap">
+              </form>
+            </td>
+            <td>{{ characters[2] }}</td>
+            <td>{{ characters[3] }}</td>
+            <td>{{ characters[4] }}</td>
+            <td>{{ characters[5] }}</td>
+            <td>{% if characters[6] > 0 %}N{{ characters[6] }}{% else %}NA{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <script>
+
+    window.addEventListener('load', (event) => {
+      document.getElementById('gradebutton').removeAttribute('disabled');
+      document.getElementById('jlptbutton').removeAttribute('disabled');
+    });
+
+  </script>
+{% endblock %}

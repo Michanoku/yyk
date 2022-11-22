@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  Search
+{% endblock %}
+
+{% block head %}
+  Search results: {{ search }}
+{% endblock %}
+
+{% block main %}
+  <div class="text-center">
+    <table class="table table-responsive center" style="width: 75%">
+      <thead>
+        <tr>
+          <th class="big-title" colspan="3">Radicals</th>
+        </tr>
+        {% if radical == [] %}
+          </thead>
+        </table>
+        <p>No radicals found for this search term.</p>
+        {% else %}
+          <tr>
+            <th style="width: 40%">Radical</td>
+            <th style="width: 20%">Name</td>
+            <th style="width: 40%">English</td>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in range(radical|length) %}
+            <tr>
+              <td style="width: 40%"><form action="/radicals" method="post"><input type="submit" name="radical" value="{{ radical[i][0]}}" class="btn btn-outline-dark text-nowrap"></form></td>
+              <td style="width: 20%">{{ radical[i][1]}}</td>
+              <td style="width: 40%">{{ radical[i][2]}}</td>
+            </tr>
+          {% endfor %}
+        {% endif %}
+      </tbody>
+    </table>
+    <table class="table table-responsive center" style="width: 75%">
+      <thead>
+        <tr>
+          <th class="big-title" colspan="3">Kanji</th>
+        </tr>
+        {% if kanji == [] %}
+          </thead>
+        </table>
+        <p>No kanji found for this search term.</p>
+        {% else %}
+          <tr>
+            <th style="width: 40%">Kanji</td>
+            <th style="width: 20%">On-yomi</td>
+            <th style="width: 40%">Meaning</td>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in range(kanji|length) %}
+            <tr>
+              <td style="width: 40%"><form action="/kanji" method="post"><input type="submit" name="kanji" value="{{ kanji[i][0]}}" class="btn btn-outline-dark text-nowrap"></form></td>
+              <td style="width: 20%">{{ kanji[i][1]}}</td>
+              <td style="width: 40%">{{ kanji[i][2]}}</td>
+            </tr>
+          {% endfor %}
+        {% endif %}
+      </tbody>
+    </table>
+    <table class="table table-responsive center" style="width: 75%">
+      <thead>
+        <tr>
+          <th class="big-title" colspan="3">Vocabulary</th>
+        </tr>
+        {% if vocabulary == [] %}
+          </thead>
+        </table>
+        <p>No vocabulary found for this search term.</p>
+        {% else %}
+          <tr>
+          <th style="width: 40%">Expression</td>
+          <th style="width: 20%">Reading</td>
+          <th style="width: 40%">Meaning</td>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in range(vocabulary|length) %}
+            <tr>
+              <td style="width: 40%" class="nowrap"><form action="/vocabulary" method="post"><input type="submit" name="vocabulary" value="{{ vocabulary[i][0] }}" class="btn btn-outline-dark text-nowrap"></form></td>
+              <td style="width: 20%">{{ vocabulary[i][1]}}</td>
+              <td style="width: 40%">{{ vocabulary[i][2]}}</td>
+            </tr>
+          {% endfor %}
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

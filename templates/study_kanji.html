@@ -1,0 +1,297 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  Study kanji
+{% endblock %}
+
+{% block head %}
+  {% if kanjistudy == "yes" %}
+    <div id="typehead">
+      {% if first[0][1] == "radical" %}
+        New radical
+      {% else %}
+        New kanji
+      {% endif %}
+    </div>
+  {% else %}
+    Kanji
+  {% endif %}
+{% endblock %}
+
+{% block main %}
+  {% if kanjistudy == "yes" %}
+    <div id="finished" class="text-center">
+      <p class="logobanner">All done.</p>
+      <p>
+        <h4>Back to:</h4>
+      </p>
+      <p>
+        <a href="/" class="btn btn-lg btn-outline-primary">Home</a>
+        <a href="/study" class="btn btn-lg btn-outline-primary">Study</a>
+      </p>
+    </div>
+    <div class="row" id="everything">
+      <div class="col">
+        <div class="card center" style="width: 30vw; height: 30vw;">
+          <h6 id="titlelabel" class="floating-label">No: {{ first[0][2] }}</h6>
+          <h6 id="studyid">{{ first[0][0] }}</h6>
+          <div class="text-center center" id="svgbtntitle">
+            {% if first[0][1] == "radical" %}
+              <h5 class="card-title main-symbol">{{ first[0][3] }}</h5>
+            {% else %}
+              <svg id="svgblack" viewBox="0 0 100 100" class="strokes">
+                {{ first[0][14]|safe }}
+              </svg>
+              <svg id="svgblackstrokes" viewBox="0 0 100 100" class="strokes">
+                {{ first[0][14]|safe }}{{ first[0][16]|safe }}
+              </svg>
+              <svg id="svgcolor" viewBox="0 0 100 100" class="strokes">
+                {{ first[0][15]|safe }}
+              </svg>
+              <svg id="svgcolorstrokes" viewBox="0 0 100 100" class="strokes">
+                {{ first[0][15]|safe }}{{ first[0][16]|safe }}
+              </svg>
+            {% endif %}
+          </div>
+          <div id="svgtogglebuttons" class="text-center" style="display: {% if first[0][1] == 'kanji' %}inline{% else %}none{% endif %}">
+            <div class="btn-group btn-group-toggle" data-toggle="buttons" role="group">
+              <hr class="invisible-separation">
+              <button onclick="toggleStrokes()" id="strokesbutton" data-toggle="button" class="btn toggle-buttons btn-sm btn-outline-secondary text-nowrap" disabled>
+                Stroke Order
+              </button>
+              <button onclick="toggleColor()" id="colorbutton" data-toggle="button" class="btn toggle-buttons btn-sm btn-outline-secondary text-nowrap" disabled>
+                Stroke Color
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card center" style="width: 30vw;"></div>
+          <div class="card-body text-center">
+            <div id="contentkanrad">
+              {% if first[0][1] == "radical" %}
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item infofieldsmall">
+                    <h5 class="card-title" id="title1">{{ first[0][6] }}</h5>
+                  </li>
+                  <li class="list-group-item infofieldbig">
+                    <h6 class="floating-label" id="label1">Name</h6>
+                    <p id="field1">{{ first[0][5] }}</p>
+                  </li>
+                  <li class="list-group-item infofieldgiant">
+                    <h6 class="floating-label" id="label2">Group</h6>
+                    <p id="field2">{{ first[0][7] }}</p>
+                  </li>
+                  <li class="list-group-item infofieldsmall">
+                    <h6 class="floating-label" id="label3">Strokes</h6>
+                    <p id="field3">{{ first[0][8] }}</p>
+                  </li>
+                  <li class="list-group-item infofieldsmall">
+                    <h6 class="floating-label" id="label4">All variations</h6>
+                    <p id="field4">{{ first[0][4] }}</p>
+                  </li>
+                  <li class="list-group-item infofieldsmall">
+                    <h6 class="floating-label" id="label5"></h6>
+                    <p id="field5"></p>
+                  </li>
+                  <li class="list-group-item infofieldsmall">
+                    <button type="button" class="btn btn-sm btn-outline-dark radical-button" id="reveal" onclick="reveal()" style="font-size: 2vw">
+                      Reveal
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-primary radical-button" id="next" onclick="getData('0', 'next')" style="font-size: 2vw">
+                      Next
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary radical-button" id="again" onclick="getData('0', 'again')" style="font-size: 2vw">
+                      Again
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-success radical-button" id="gotit" onclick="getData('0', 'gotit')" style="font-size: 2vw">
+                      Got it
+                    </button>
+                  </li>
+                </ul>
+                {% else %}
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item infofieldsmall">
+                      <h5 class="card-title" id="title1">{{ first[0][6] }}</h5>
+                    </li>
+                    <li class="list-group-item infofieldbig">
+                      <h6 class="floating-label" id="label1">On-yomi</h6>
+                      <p id="field1">{{ first[0][4] }}</p>
+                    </li>
+                    <li class="list-group-item infofieldgiant">
+                      <h6 class="floating-label" id="label2">Kun-yomi</h6>
+                      <p id="field2">{{ first[0][5] }}</p>
+                    </li>
+                    <li class="list-group-item infofieldsmall">
+                      <h6 class="floating-label" id="label3">Grade</h6>
+                      <p id="field3">{{ first[0][11] }}</p>
+                    </li>
+                    <li class="list-group-item infofieldsmall">
+                      <h6 class="floating-label" id="label4">JLPT</h6>
+                      <p id="field4">{% if first[0][12] > 0 %}N{{ first[0][12] }}{% else %}NA{% endif %}</p>
+                    </li>
+                    <li class="list-group-item infofieldsmall">
+                      <h6 class="floating-label" id="label5">Radical</h6>
+                      <p id="field5">{{ first[0][8] }}</p>
+                    </li>
+                    <li class="list-group-item">
+                      <button type="button" class="btn btn-sm btn-outline-dark radical-button" id="reveal" onclick="reveal()" style="font-size: 2vw">
+                        Reveal
+                      </button>
+                      <button type="button" class="btn btn-sm btn-outline-primary radical-button" id="next" onclick="getData('0', 'next')" style="font-size: 2vw" disabled>
+                        Next
+                      </button>
+                      <button type="button" class="btn btn-sm btn-outline-secondary radical-button" id="again" onclick="getData('0', 'again')" style="font-size: 2vw">
+                        Again
+                      </button>
+                      <button type="button" class="btn btn-sm btn-outline-success radical-button" id="gotit" onclick="getData('0', 'gotit')" style="font-size: 2vw">
+                        Got it
+                      </button>
+                    </li>
+                  </ul>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+
+      window.addEventListener('load', (event) => {
+        document.getElementById('next').removeAttribute('disabled');
+        document.getElementById('strokesbutton').removeAttribute('disabled');
+        document.getElementById('colorbutton').removeAttribute('disabled');
+      });
+
+      function reveal() {
+        document.getElementById('again').removeAttribute('disabled');
+        document.getElementById('gotit').removeAttribute('disabled');
+        document.getElementById('again').style.display = "inline";
+        document.getElementById('gotit').style.display = "inline";
+        for (var j = 1; j < 4; j++) {
+          document.getElementById('field' + j).style.display = "inline";
+        }
+
+        document.getElementById('title1').style.display = "inline";
+        document.getElementById('reveal').style.display = "none";
+      }
+
+      var toStudy = [];
+      var counter = 0;
+      var second = 0;
+
+      function getData(listNo, action) {
+        document.getElementById('strokesbutton').setAttribute("disabled", "");
+        document.getElementById('colorbutton').setAttribute("disabled", "");
+        counter = counter + 1
+        var id = parseInt(document.getElementById("studyid").innerHTML);
+        if (counter == {{ max }}) {
+          counter = 0;
+          second = 1;
+        }
+
+        if (action == "next") {
+          document.getElementById('next').setAttribute("disabled", "");
+          toStudy.push("");
+        }
+        else if (action == "gotit") {
+          document.getElementById('gotit').setAttribute("disabled", "");
+          document.getElementById('again').setAttribute("disabled", "");
+          toStudy[id] = "ok";
+        }
+        else {
+          document.getElementById('gotit').setAttribute("disabled", "");
+          document.getElementById('again').setAttribute("disabled", "");
+        }
+
+        let url = "/study_kanji";
+        let data = { "number": listNo, "okcheck": toStudy, "max": {{ max }}, "studylist": {{ studylist|tojson }}};
+        fetch(url, {
+          "method": "POST",
+          "headers": {"Content-Type": "application/json"},
+          "body": JSON.stringify(data),
+        }).then(response => response.json())
+        .then(data => {
+          console.log(data);
+          if (data == "done") {
+            document.getElementById('everything').style.display = "none";
+            document.getElementById('finished').style.display = "block";
+          }
+
+          if (second == 1) {
+            document.getElementById('next').style.display = "none";
+            document.getElementById('again').style.display = "none";
+            document.getElementById('gotit').style.display = "none";
+            for (var j = 1; j < 4; j++) {
+              document.getElementById('field' + j).style.display = "none";
+            }
+
+            document.getElementById('title1').style.display = "none";
+            document.getElementById('reveal').style.display = "inline";
+          }
+
+          if (data[1] == "radical") {
+            document.getElementById('label1').innerHTML = "Name";
+            document.getElementById('label2').innerHTML = "Group";
+            document.getElementById('label3').innerHTML = "Strokes";
+            document.getElementById('label4').innerHTML = "All variations";
+            document.getElementById('label5').innerHTML = "";
+            document.getElementById('typehead').innerHTML = "New radical";
+            document.getElementById('svgbtntitle').innerHTML = data[3];
+            document.getElementById('svgtogglebuttons').style.display = "none";
+            document.getElementById('title1').innerHTML = data[6];
+            document.getElementById('field1').innerHTML = data[5];
+            document.getElementById('field2').innerHTML = data[7];
+            document.getElementById('field3').innerHTML = data[8];
+            document.getElementById('field4').innerHTML = data[4];
+            document.getElementById('field5').innerHTML = "";
+          }
+          else {
+            document.getElementById('label1').innerHTML = "On-yomi";
+            document.getElementById('label2').innerHTML = "Kun-yomi";
+            document.getElementById('label3').innerHTML = "Grade";
+            document.getElementById('label4').innerHTML = "JLPT";
+            document.getElementById('label5').innerHTML = "Radical";
+            document.getElementById('typehead').innerHTML = "New kanji";
+            document.getElementById('svgbtntitle').innerHTML = data[14];
+            document.getElementById('svgtogglebuttons').style.display = "inline";
+            document.getElementById('title1').innerHTML = data[6];
+            document.getElementById('field1').innerHTML = data[4];
+            document.getElementById('field2').innerHTML = data[5];
+            document.getElementById('field3').innerHTML = data[11];
+            document.getElementById('field4').innerHTML = data[12];
+            document.getElementById('field5').innerHTML = data[8];
+          }
+
+          document.getElementById('titlelabel').innerHTML = "No: " + data[2]
+          document.getElementById('studyid').innerHTML = data[0];
+          if (second == 0) {
+            let nextData = "getData('" + data[0] + "', 'next')";
+            document.getElementById('next').setAttribute("onclick", nextData);
+          }
+          else {
+            let againData = "getData('" + data[0] + "', 'again')";
+            document.getElementById('again').setAttribute("onclick", againData);
+            let gotItData = "getData('" + data[0] + "', 'gotit')";
+            document.getElementById('gotit').setAttribute("onclick", gotItData);
+          }
+
+          document.getElementById('next').removeAttribute('disabled');
+          document.getElementById('strokesbutton').removeAttribute('disabled');
+        document.getElementById('colorbutton').removeAttribute('disabled');
+        })
+        
+        .catch((err) => console.log("Access failed: " + url + " Reason: " + err));
+      }
+
+    </script>
+  {% elif kanjistudy == "no" and wordstudy == "yes" %}
+    <p class="title text-center">No new kanji for now. Please study remaining new words first.</p>
+  {% elif kanjistudy == "no" and wordstudy == "no" and words == "yes" %}
+    <p class="title text-center">No new kanji for now. There are remaining words to study in the next session.</p>
+  {% else %}
+    <p class="title text-center">Nothing more to study today.</p>
+  {% endif %}
+{% endblock %}

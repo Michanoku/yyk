@@ -1,0 +1,129 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  Profile
+{% endblock %}
+
+{% block head %}
+  Profile: {{ user_data[0][0] }}
+{% endblock %}
+
+{% block main %}
+  <div class="text-center">
+    <div class="btn-group btn-group-toggle" data-toggle="buttons" role="group" aria-label="Basic outlined example">
+      <button onclick="toggleStats()" id="statsbutton" data-toggle="button" class="btn toggle-buttons btn-sm btn-outline-secondary text-nowrap" disabled>Statistics</button>
+      <button onclick="toggleSet()" id="setbutton" data-toggle="button" class="btn toggle-buttons btn-sm btn-outline-secondary text-nowrap" disabled>Settings</button>
+    </div>
+  </div>
+  <hr class="invisible-separation">
+  <div id="statistics" class="container-fluid w-50">
+    {% if newuser == "no" %}
+      <h3>Current Grade: {{ grade }} of 8</h3>
+      <h4 id="gradeprog">Kanji in this Grade: {{ gradeprog }} of {{ amount }}</h4>
+      <div class="progress">
+        <div id="gradeprogbar" class="progress-bar" role="progressbar" aria-valuenow="{{ gradeper }}" aria-valuemin="0" aria-valuemax="100" style="{% if gradeper < 3 %}width:5%; background-color: #E9ECEF; color: #000000{% else %}width:{{ gradeper }}%; background-color: #000000{% endif %}">
+          {{ gradeper }}%
+        </div>
+      </div>
+      <hr>
+      <h4 id="totalprog">Total kanji studied: {{ user_data[0][4] }} of 2387</h4>
+      <div class="progress">
+        <div id="totalprogbar" class="progress-bar" role="progressbar" style="{% if totalper < 4 %}width:5%; background-color: #E9ECEF; color: #000000{% else %}width:{{ totalper }}%; background-color: #000000{% endif %}">
+          <div>{{ totalper }}%</div>
+        </div>
+      </div>
+      <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width:3%; background-color: #E69F00">
+          1
+        </div>
+        <div class="progress-bar" role="progressbar" style="width:7%; background-color: #56B4E9">
+          2
+        </div>
+        <div class="progress-bar" role="progressbar" style="width:8%; background-color: #009E73">
+          3
+        </div>
+        <div class="progress-bar" role="progressbar" style="width:8%; background-color: #F0E442">
+          4
+        </div>
+        <div class="progress-bar" role="progressbar" style="width:8%; background-color: #0072B2">
+          5
+        </div>
+        <div class="progress-bar" role="progressbar" style="width:8%; background-color: #D55E00">
+          6
+        </div>
+        <div class="progress-bar" role="progressbar" style="width:47%; background-color: #CC79A7">
+          7
+        </div>
+        <div class="progress-bar" role="progressbar" style="width:11%; background-color: #E69F00">
+          8
+        </div>
+      </div>
+      <hr>
+      <h4>Total Radicals studied: {{ radamount }} of 214</h4>
+      <div class="progress">
+        <div class="progress-bar" role="progressbar" aria-valuenow="{{ radper }}" aria-valuemin="0" aria-valuemax="100" style="{% if radper < 4 %}width:5%; background-color: #E9ECEF; color: #000000{% else %}width:{{ radper }}%; background-color: #000000{% endif %}">
+          {{ radper }}%
+        </div>
+      </div>
+      <hr>
+      <h4>Total Words studied: {{ wordamount }} of 14071</h4>
+      <div class="progress">
+        <div class="progress-bar" role="progressbar" aria-valuenow="{{ wordper }}" aria-valuemin="0" aria-valuemax="100" style="{% if wordper < 4 %}width:5%; background-color: #E9ECEF; color: #000000{% else %}width:{{ wordper }}%; background-color: #000000{% endif %}">
+          {{ wordper }}%
+        </div>
+      </div>
+      <hr>
+      <h4>Last radical: {{ last_rad[0][0] }} Last kanji: {{ last_kan[0][0] }} Last word: {{ last_wrd[0][0] }}</h4>
+      <hr>
+      <h5>{{ kanjidays }} days of study to finish kanji. {{ worddays }} days of study to finish vocabulary.</h5>
+      <h5>(If studied every day at current settings.)</h5>
+    {% else %}
+      <p class="subtitle text-center">In order for statistics to be displayed, please complete at least one kanji and word study.</p>
+    {% endif %}
+  </div>
+  <div id="settings" class="container-fluid w-50 text-center">
+    <p class="subtitle text-center">Session options</p>
+    <form id="session-options" action="/profile" method="post"><input type="hidden" name="checkform" value="session-options"></form>
+    <table class="center" style="width: 70%">
+      <tr>
+        <td style="width: 40%">New kanji per session</td>
+        <td style="width: 30%"><input type="number" form ="session-options" name="kanji-interval" min="1" max="30" value="{{ user_data[0][1] }}" class="form-control" id="kanji-interval"></td>
+        <td style="width: 30%" rowspan="3"><button form ="session-options" class="btn btn-outline-primary" type="submit">SET</button></td>
+      </tr>
+      <tr>
+        <td>New words per session</td>
+        <td><input type="number" form ="session-options" name="word-interval" min="1" max="100" value="{{ user_data[0][2] }}" class="form-control" id="word-interval"></td>
+      </tr>
+      <tr>
+        <td>Reviews per session</td>
+        <td><input type="number" form ="session-options" name="review-interval" min="1" max="400" value="{{ user_data[0][3] }}" class="form-control" id="review-interval"></td>
+      </tr>
+    </table>
+    <hr>
+    <p class="subtitle text-center">Change password</p>
+    <form id="change-password" action="/profile" method="post"><input type="hidden" name="checkform" value="change-password"></form>
+    <table class="center" style="width: 70%">
+      <tr>
+        <td style="width: 40%">Current password</td>
+        <td style="width: 30%"><input form="change-password" class="form-control mx-auto w-auto" id="password" name="password" type="password"></td>
+        <td style="width: 30%" rowspan="3"><button form ="change-password" class="btn btn-outline-primary" type="submit">SET</button></td>
+      </tr>
+      <tr>
+        <td>New password</td>
+        <td><input form ="change-password" class="form-control mx-auto w-auto" id="newpassword" name="newpassword" type="password"></td>
+      </tr>
+      <tr>
+        <td>Confirmation</td>
+        <td><input form ="change-password" class="form-control mx-auto w-auto" id="confirmation" name="confirmation" type="password"></td>
+      </tr>
+    </table>
+  </div>
+  <script>
+
+    window.addEventListener('load', (event) => {
+      document.getElementById('statsbutton').removeAttribute('disabled');
+      document.getElementById('setbutton').removeAttribute('disabled');
+    });
+
+  </script>
+{% endblock %}

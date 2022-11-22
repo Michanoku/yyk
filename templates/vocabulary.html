@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  Vocabulary
+{% endblock %}
+
+{% block head %}
+  Vocabulary: {{ lookup[0][0] }}
+{% endblock %}
+
+{% block main %}
+  <div class="text-center">
+    <div style="align-items: center; display: inline-flex;">
+      <div class="card" style="width: 40vw;">
+        <h6 class="floating-label">Expression</h6>
+        <div class="card-body">
+          <h5 class="card-title main-symbol">{{ lookup[0][0] }}</h5>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <h6 class="floating-label">Listen</h6>
+              <audio controls src="{{ sayit(text=lookup[0][1], lang='ja')}}"></audio>
+            </li>
+            <li class="list-group-item">
+              <h6 class="floating-label">Reading</h6>
+              {{ lookup[0][1] }}
+            </li>
+            <li class="list-group-item">
+              <h6 class="floating-label">Meaning</h6>
+              {{ lookup[0][2] }}
+            </li>
+            <li class="list-group-item">
+              <h6 class="floating-label">JLPT</h6>
+              {% if lookup[0][3] > 0 %}
+                {{ lookup[0][3] }}
+              {% else %}
+                NA
+              {% endif %}
+            </li>
+            <li class="list-group-item">
+              <h6 class="floating-label">Components</h6>
+              {% for i in kanjistring %}
+                <form class="radical-button" action="/kanji" method="post"><input type="submit" name="kanji" value="{{ i }}" class="btn btn-outline-dark btn-sm"></form>
+              {% endfor %}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

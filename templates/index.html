@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  Yes, you KANJI!
+{% endblock %}
+
+{% block main %}
+  {% if session["user_id"] %}
+    <div class="container-fluid">
+      <div class="row justify-content-md-around">
+        <div class="col-md-auto text-center">
+          <div class="card" style="width: 25vw;">
+            <img class="card-img-top center" src="static/img/study.jpg" style="width: 24vw; height: 15vw" alt="Japanese for study">
+            <div class="card-body">
+              <p class="card-text"><a href="/study" class="btn btn-lg btn-outline-primary">Study</a></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-auto text-center">
+          <div class="card" style="width: 25vw;">
+            <img class="card-img-top center" src="static/img/practice.jpg" style="width: 24vw; height: 15vw" alt="Japanese for practice">
+            <div class="card-body">
+              <p class="card-text"><a href="/review" class="btn btn-lg btn-outline-primary">Review</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="container text-center">
+      <img class="img-fluid w-75" alt="yes, you kanji logo" style="width: auto; height: 15vw" src="static/img/logo.jpg">
+    </div>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,224 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  Review kanji
+{% endblock %}
+
+{% block head %}
+  Kanji
+{% endblock %}
+
+{% block main %}
+  {% if review == "done" %}
+    <p class="title text-center">No more kanji to review today.</p>
+  {% else %}
+    <div id="finished" class="text-center">
+      <p class="logobanner">All done.</p>
+      <p>
+        <h4>Back to:</h4>
+      </p>
+      <p>
+        <a href="/" class="btn btn-lg btn-outline-primary">Home</a>
+        <a href="/review" class="btn btn-lg btn-outline-primary">Reviews</a>
+      </p>
+    </div>
+    <div class="row" id="everything">
+      <div class="col">
+        <div class="card center" style="width: 30vw; height: 30vw;">
+          <h6 id="titlelabel" class="floating-label">No: {{ first[0][1] }}</h6>
+          <h6 id="studyid">{{ first[0][0] }}</h6>
+          <div class="text-center center" id="svgbtntitle">
+            <svg id="svgblack" viewBox="0 0 100 100" class="strokes">
+              {{ first[0][9]|safe }}
+            </svg>
+            <svg id="svgblackstrokes" viewBox="0 0 100 100" class="strokes">
+              {{ first[0][9]|safe }}{{ first[0][11]|safe }}
+            </svg>
+            <svg id="svgcolor" viewBox="0 0 100 100" class="strokes">
+              {{ first[0][10]|safe }}
+            </svg>
+            <svg id="svgcolorstrokes" viewBox="0 0 100 100" class="strokes">
+              {{ first[0][10]|safe }}{{ first[0][11]|safe }}
+            </svg>
+          </div>
+          <div id="svgtogglebuttons" class="text-center">
+            <hr class="invisible-separation">
+            <div class="btn-group btn-group-toggle" data-toggle="buttons" role="group">
+              <button onclick="toggleStrokes()" id="strokesbutton" data-toggle="button" class="btn toggle-buttons btn-sm btn-outline-secondary text-nowrap" disabled>
+                Stroke Order
+              </button>
+              <button onclick="toggleColor()" id="colorbutton" data-toggle="button" class="btn toggle-buttons btn-sm btn-outline-secondary text-nowrap" disabled>
+                Stroke Color
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card center" style="width: 30vw;"></div>
+          <div class="card-body text-center">
+            <div id="contentkanrad">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item infofieldsmall">
+                  <h5 class="card-title" id="review-title1">{{ first[0][5] }}</h5>
+                </li>
+                <li class="list-group-item infofieldbig">
+                  <h6 class="floating-label" id="label1">On-yomi</h6>
+                  <p id="review-field1">{{ first[0][3] }}</p>
+                </li>
+                <li class="list-group-item infofieldgiant">
+                  <h6 class="floating-label" id="label2">Kun-yomi</h6>
+                  <p id="review-field2">{{ first[0][4] }}</p>
+                </li>
+                <li class="list-group-item infofieldsmall">
+                  <h6 class="floating-label" id="label3">Grade</h6>
+                  <p id="review-field3">{{ first[0][7] }}</p>
+                </li>
+                <li class="list-group-item infofieldsmall">
+                  <h6 class="floating-label" id="label4">JLPT</h6>
+                  <p id="review-field4">{% if first[0][8] > 0 %}N{{ first[0][8] }}{% else %}NA{% endif %}</p>
+                </li>
+                <li class="list-group-item infofieldsmall">
+                  <h6 class="floating-label" id="label5">Radical</h6>
+                  <p id="review-field5">{{ first[0][6] }}</p>
+                </li>
+                <li class="list-group-item">
+                  <button type="button" class="btn btn-sm btn-outline-dark radical-button" id="review-reveal" onclick="reveal()" style="font-size: 2vw" disabled>
+                    Reveal
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-danger radical-button" id="ef-0" onclick="getData('0', '0')" style="font-size: 2vw">
+                    0
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-warning radical-button" id="ef-1" onclick="getData('0', '1')" style="font-size: 2vw">
+                    1
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-warning radical-button" id="ef-2" onclick="getData('0', '2')" style="font-size: 2vw">
+                    2
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-info radical-button" id="ef-3" onclick="getData('0', '3')" style="font-size: 2vw">
+                    3
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-info radical-button" id="ef-4" onclick="getData('0', '4')" style="font-size: 2vw">
+                    4
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-success radical-button" id="ef-5" onclick="getData('0', '5')" style="font-size: 2vw">
+                    5
+                  </button>
+                  <p>
+                    <h6 id="ef-exp">
+                      0 = Forgotten, 1 = Incorrect but remembered, 2 = Incorret but easily remembered, 3 = Correct but difficult,
+                      4 = Correct after some thinking, 5 = Perfect response
+                    </h6>
+                  </p>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+
+      window.addEventListener('load', (event) => {
+        document.getElementById('review-reveal').removeAttribute('disabled');
+        document.getElementById('strokesbutton').removeAttribute('disabled');
+        document.getElementById('colorbutton').removeAttribute('disabled');
+      });
+
+      function reveal() {
+        for (var j = 0; j < 6; j++) {
+          document.getElementById('ef-' + j).removeAttribute('disabled');
+          document.getElementById('ef-' + j).style.display = "inline";
+        }
+
+        for (var j = 1; j < 6; j++) {
+          document.getElementById('review-field' + j).style.display = "inline";
+        }
+
+        document.getElementById('ef-exp').style.display = "inline";
+        document.getElementById('review-title1').style.display = "inline";
+        document.getElementById('review-reveal').style.display = "none";
+      }
+
+      var efValue = [];
+      var okCheck = [];
+      var counter = 0;
+      var second = 0;
+
+      function getData(listNo, action) {
+        document.getElementById('strokesbutton').setAttribute("disabled", "");
+        document.getElementById('colorbutton').setAttribute("disabled", "");
+        for (var j = 0; j < 6; j++) {
+          document.getElementById('ef-' + j).setAttribute("disabled", "");
+        }
+
+        counter = counter + 1;
+        var id = parseInt(document.getElementById("studyid").innerHTML);
+
+        if (second == 0) {
+          efValue.push(action);
+          if (action == "5" || action == "4") {
+            okCheck.push("ok");
+          }
+          else {
+            okCheck.push("");
+          }
+
+        }
+        else {
+          if (action == "5" || action == "4") {
+            okCheck[id] = "ok";
+          }
+        }
+
+        if (counter == {{ max }}) {
+          second = 1;
+          counter = 0;
+        }
+
+        let url = "/review_kanji";
+        let data = { "number": listNo, "okcheck": okCheck, "efvalue": efValue, "max": {{ max }}, "reviewlist": {{ reviewlist|tojson }}};
+        fetch(url, {
+          "method": "POST",
+          "headers": {"Content-Type": "application/json"},
+          "body": JSON.stringify(data),
+        }).then(response => response.json())
+        .then(data => {
+          console.log(data);
+          if (data == "done") {
+            document.getElementById('everything').style.display = "none";
+            document.getElementById('finished').style.display = "block";
+          }
+
+          for (var j = 0; j < 6; j++) {
+            document.getElementById('ef-' + j).style.display = "none";
+            var value = "getData('" + data[0] + "', '" + j + "')";
+            document.getElementById('ef-' + j).setAttribute("onclick", value);
+          }
+
+          for (var j = 1; j < 6; j++) {
+            document.getElementById('review-field' + j).style.display = "none";
+          }
+
+          document.getElementById('ef-exp').style.display = "none";
+          document.getElementById('review-title1').style.display = "none";
+          document.getElementById('review-reveal').style.display = "inline";
+          document.getElementById('svgbtntitle').innerHTML = data[9];
+          document.getElementById('review-title1').innerHTML = data[5];
+          document.getElementById('review-field1').innerHTML = data[3];
+          document.getElementById('review-field2').innerHTML = data[4];
+          document.getElementById('review-field3').innerHTML = data[7];
+          document.getElementById('review-field4').innerHTML = data[8];
+          document.getElementById('review-field5').innerHTML = data[6];
+          document.getElementById('titlelabel').innerHTML = "No: " + data[1]
+          document.getElementById('studyid').innerHTML = data[0];
+          document.getElementById('strokesbutton').removeAttribute('disabled');
+          document.getElementById('colorbutton').removeAttribute('disabled');
+        })
+        
+        .catch((err) => console.log("Access failed: " + url + " Reason: " + err));
+      }
+
+    </script>
+  {% endif %}
+{% endblock %}

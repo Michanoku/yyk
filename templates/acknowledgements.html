@@ -1,0 +1,185 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  Acknowledgements
+{% endblock %}
+
+{% block head %}
+  Acknowledgements
+{% endblock %}
+
+{% block main %}
+  <div class="container-fluid w-75 text-justify">
+    <p>
+      <h5>
+        This application was made as my submission for the final project for CS50x 2022. It was designed in VS Code
+        using Python, HTML and CSS. As Professor Malan has said in his course many times, we should learn to stand
+        on the shoulders of others. In this spirit, I could not have finished this application without the help and
+        prior work of many others, all of whom shall be named here.
+      </h5>
+    </p>
+    <br>
+    <p><h4>Database Creation</h4></p>
+    <p>
+      <h5>
+        The database for this application was created by integrating radical data that I have compiled myself,
+        with kanji data, vocabulary data and stroke order data pulled from other sources.
+      </h5>
+    </p>
+    <br>
+    <p>
+      <h6>
+        <table style="width: 100%">
+          <tr>
+            <th style="width: 20%">Kanji</th>
+            <td style="width: 80%">
+              The kanji data was obtained from <a href="http://www.edrdg.org/wiki/index.php/KANJIDIC_Project">
+              The KANJIDIC project</a>. The KANJIDIC project files are released under a Creative Commons Attribution-ShareAlike
+              Licence (V3.0). See the <a href="http://www.edrdg.org/edrdg/licence.html">EDRDG General Dictionary Licence
+              Statement</a> for details. Only jouyou kanji and JLPT relevant kanji have been included.
+            </td>
+          </tr>
+        </table>
+      </h6>
+    </p>
+    <p>
+      <h6>
+        <table style="width: 100%">
+          <tr>
+            <th rowspan="2" style="width: 20%">Vocabulary</th>
+            <td style="width: 80%">
+              The vocabulary data was obtained from <a href=" ">jisho</a>. Jisho uses JMdict and JMnedict
+              for their vocabulary. These dictionary files are released under a Creative Commons Attribution-ShareAlike
+              Licence (V3.0). See the <a href="http://www.edrdg.org/edrdg/licence.html">EDRDG General Dictionary Licence
+              Statement</a> for details. Only JLPT relevant and common words have been included.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              The application to obtain the data from jisho was made by John Charlton (coolmule0). It can be found
+              <a href="https://github.com/coolmule0/JLPT-N5-N1-Japanese-Vocabulary-Anki">here</a>. The application
+              is licensed under the GNU General Public License (V3.0). See the
+              <a href="https://github.com/coolmule0/JLPT-N5-N1-Japanese-Vocabulary-Anki/blob/main/LICENSE">
+              JLPT-N5-N1-Japanese-Vocabulary-Anki LICENSE page</a> for details.
+            </td>
+          </tr>
+        </table>
+      </h6>
+    </p>
+    <p>
+      <h6>
+        <table style="width: 100%">
+          <tr>
+            <th style="width: 20%">Stroke order</th>
+            <td style="width: 80%">
+              The stroke order svg data for all kanji was obtained from <a href="https://kanjivg.tagaini.net/">KanjiVG</a>.
+              KanjiVG is copyright &copy; 2009-2022 Ulrich Apel. The files are released under the Creative Commons
+              Attribution-ShareAlike License (V3.0). See the <a href="https://creativecommons.org/licenses/by-sa/3.0/">
+              Creative Commons license page</a> for details. Only svg data for jouyou and JLPT relevant kanji has been included.
+              Some version of the svg data has been adjusted by me for color blindness. See below for details.
+            </td>
+          </tr>
+        </table>
+    </h6>
+    </p>
+    <p>
+      <h6>
+        <table style="width: 100%">
+          <tr>
+            <th style="width: 20%">Stroke color</th>
+            <td style="width: 80%">
+              In order to make the different strokes as easy as possible to see for people with color blindness, I used
+              <a href="https://davidmathlogic.com/colorblind/">this article</a> by <a href="https://davidmathlogic.com/">
+              David Nichols</a> as reference. The color pattern I chose is based on
+              <a href="https://www.nature.com/articles/nmeth.1618">this article</a> by Bang Wong.
+            </td>
+          </tr>
+        </table>
+      </h6>
+    </p>
+    <br>
+    <p>
+      <h4>Other Acknowledgements</h4>
+    </p>
+    <p>
+      <h5>
+        Besides the creation of the database, there are other parts of this application to which other peoples work have
+        been an integral part.
+      </h5>
+    </p>
+    <br>
+    <p>
+      <h6>
+        <table style="width: 100%">
+          <tr>
+            <th style="width: 20%">SuperMemo Algorithm</th>
+            <td style="width: 80%">
+              In order to study effectively, the SuperMemo Algorithm SM-2 is used. You can read about it
+              <a href="https://www.super-memory.com/english/ol/sm2.htm">here</a>. Algorithm SM-2, &copy; Copyright
+              SuperMemo World, 1991. See <a href="https://www.supermemo.com">supermemo.com</a> and
+              <a href="https://www.supermemo.eu">supermemo.eu</a> for details.
+            </td>
+          </tr>
+        </table>
+      </h6>
+    </p>
+    <p>
+      <h6>
+        <table style="width: 100%">
+          <tr>
+            <th style="width: 20%">Text to speech</th>
+            <td style="width: 80%">
+              The text to speech functionality code is provided by <a href="https://pypi.org/project/Flask-gTTS/">Flask-gTTS</a>
+              and <a href="https://github.com/pndurette/gTTS">gTTS</a>. Flask-gTTS is copyright &copy; 2017 Mohamed Feddad and
+              is released under the MIT License. See the <a href="https://github.com/mrf345/flask_gtts/blob/master/LICENSE.txt">
+              license page</a> for details. gTTS is copyright &copy; 2014-2021 Pierre Nicolas Durette &
+              <a href="https://github.com/pndurette/gTTS/graphs/contributors">Contributors</a> and is released under the MIT
+              License. See the <a href="https://github.com/pndurette/gTTS/blob/master/LICENSE">license page</a> for details.
+            </td>
+          </tr>
+        </table>
+      </h6>
+    </p>
+    <p>
+      <h6>
+        <table style="width: 100%">
+          <tr>
+            <th style="width: 20%">Other Flask functions</th>
+            <td style="width: 80%">
+              Professor David J. Malan and the CS50x staff that provided the psets, which I used to learn how to include several
+              functionalities such as Flask_sessions, werkzeug.security and the general approach to handle a web application
+              with safety checks etc.
+            </td>
+          </tr>
+        </table>
+      </h6>
+    </p>
+    <p>
+      <h6>
+        <table style="width: 100%">
+          <tr>
+            <th style="width: 20%">Calligraphy Art</th>
+            <td style="width: 80%">
+              The calligraphy used for the various menus was created by my wife. She used a calligraphy brush, ink and paper
+              to write the kanji needed. I only edited them to fit in with the rest of the application.
+            </td>
+          </tr>
+        </table>
+      </h6>
+    </p>
+    <p>
+      <h6>
+        <table style="width: 100%">
+          <tr>
+            <th style="width: 20%">Debugging and picking my brain</th>
+            <td style="width: 80%">
+              The lovely people from the ENB Discord server, who have a code channel that helped me with hints many
+              times when I was stuck or didn't understand how to solve a problem. Though I did write the application
+              on my own, their input has been invaluable.
+            </td>
+          </tr>
+        </table>
+      </h6>
+    </p>
+  </div>
+{% endblock %}

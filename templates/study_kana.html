@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  Study kana words
+{% endblock %}
+
+{% block head %}
+  Kana words
+{% endblock %}
+
+{% block main %}
+  <p class="text-center">
+    <button id="information" class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapsekana" aria-expanded="false" aria-controls="collapsekana" disabled>
+      Kana words information
+    </button>
+  </p>
+  <div class="collapse" id="collapsekana">
+    <div class="card card-body">
+        In addition to the words that include one or more kanji, there are also words that only consist of hiragana or katakana
+        in the JLPT and the common words list. The initial idea was to mix them in with the kanji words so they can be studied
+        together, however the data proved insufficient to do this in an acceptable time frame for this final project. If there
+        ever is a future release of this app beyond the final project for CS50, this will be fixed and integrated. Until then,
+        refer to these tables to find the kana words to study.
+    </div>
+  </div>
+  <div class="text-center">
+    <div class="btn-group btn-group-toggle" data-toggle="buttons" role="group" aria-label="Basic outlined example">
+      <button onclick="toggleHiragana()" id="hirabutton" data-toggle="button" class="btn toggle-buttons btn-sm btn-outline-secondary text-nowrap" aria-pressed="false" disabled>
+        Hiragana
+      </button>
+      <button onclick="toggleKatakana()" id="katabutton" data-toggle="button" class="btn toggle-buttons btn-sm btn-outline-secondary text-nowrap" aria-pressed="false" disabled>
+        Katakana
+      </button>
+    </div>
+  </div>
+  <div class="container-fluid" id="hiragana-study">
+    <table class="table table-responsive table-hover w-75 m-auto">
+      <thead>
+        <tr>
+          <th scope="col">Expression</th>
+          <th scope="col">Reading</th>
+          <th scope="col">Meaning</th>
+          <th scope="col">JLPT</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for word in hiragana %}
+          <tr>
+            <td class="nowrap"><form action="/vocabulary" method="post"><input type="submit" name="vocabulary" value="{{ word[0] }}" class="btn btn-outline-dark btn-sm"></form></td>
+            <td>{{ word[1] }}</td>
+            <td>{{ word[2] }}</td>
+            <td>{% if word[3] > 0 %}N{{ word[3] }}{% else %}NA{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="container-fluid" id="katakana-study">
+    <table class="table table-responsive table-hover w-75 m-auto">
+      <thead>
+        <tr>
+          <th scope="col">Expression</th>
+          <th scope="col">Reading</th>
+          <th scope="col">Meaning</th>
+          <th scope="col">JLPT</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for word in katakana %}
+          <tr>
+            <td class="nowrap"><form action="/vocabulary" method="post"><input type="submit" name="vocabulary" value="{{ word[0] }}" class="btn btn-outline-dark btn-sm"></form></td>
+            <td>{{ word[1] }}</td>
+            <td>{{ word[2] }}</td>
+            <td>{% if word[3] > 0 %}N{{ word[3] }}{% else %}NA{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <script>
+
+    window.addEventListener('load', (event) => {
+      document.getElementById('information').removeAttribute('disabled');
+      document.getElementById('hirabutton').removeAttribute('disabled');
+      document.getElementById('katabutton').removeAttribute('disabled');
+    });
+
+  </script>
+{% endblock %}

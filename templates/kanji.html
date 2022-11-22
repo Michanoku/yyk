@@ -1,0 +1,117 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  Kanji
+{% endblock %}
+
+{% block head %}
+  Kanji: {{ info[0][1] }}
+{% endblock %}
+
+{% block main %}
+  <div class="row text-center">
+    <div class="col-md-5">
+      <div class="card" style="width: 35vw;">
+        <h6 class="floating-label">No: {{ info[0][0] }}</h6>
+        <svg id="svgblack" viewBox="0 0 100 100" class="strokes">
+          {{ svg_black|safe }}
+        </svg>
+        <svg id="svgblackstrokes" viewBox="0 0 100 100" class="strokes">
+          {{ svg_black|safe }}{{ svg_strokes|safe }}
+        </svg>
+        <svg id="svgcolor" viewBox="0 0 100 100" class="strokes">
+          {{ svg_color|safe }}
+        </svg>
+        <svg id="svgcolorstrokes" viewBox="0 0 100 100" class="strokes">
+          {{ svg_color|safe }}{{ svg_strokes|safe }}
+        </svg>
+        <hr class="invisible-separation">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons" role="group">
+          <button onclick="toggleStrokes()" id="strokesbutton" data-toggle="button" class="btn toggle-buttons btn-sm btn-outline-secondary text-nowrap" disabled>
+            Stroke Order
+          </button>
+          <button onclick="toggleColor()" id="colorbutton" data-toggle="button" class="btn toggle-buttons btn-sm btn-outline-secondary text-nowrap" disabled>
+            Stroke Color
+          </button>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ info[0][4] }}</h5>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><h6 class="floating-label">On-yomi</h6>{{ info[0][2] }}</li>
+          <li class="list-group-item"><h6 class="floating-label">Kun-yomi</h6>{{ info[0][3] }}</li>
+          <li class="list-group-item"><h6 class="floating-label">Grade</h6>{{ info[0][7] }}</li>
+          <li class="list-group-item"><h6 class="floating-label">JLPT</h6>{% if info[0][8] > 0 %}N{{ info[0][8] }}{% else %}NA{% endif %}</li>
+        </ul>
+        <div class="card-body">
+          <h6 class="floating-label">Radical</h6>
+          <form class="radical-button" action="/radicals" method="post"><input type="submit" name="radical" value="{{ radical[0][1] }}" class="btn btn-outline-dark"></form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-7">
+      <p>
+        <div class="title">Words including this kanji</div>
+        <div class="subtitle">Toggle words by JLPT</div>
+      </p>
+      {% for i in jlpt %}
+        <button id="jlpt{{ i[0] }}" class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ i[0] }}" aria-expanded="false" aria-controls="collapse{{ i[0] }}" disabled>
+          {% if i[0] > 0 %}N{{ i[0] }}{% else %}NA{% endif %}
+        </button>
+      {% endfor %}
+      <button id="jlptall" class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse"  aria-expanded="false" aria-controls="{% for i in jlpt %}collapse{{ i[0] }}{% endfor %}" disabled>
+        All
+      </button>
+      <table class="table table-responsive" style="width: 100%">
+        <thead>
+          <tr>
+            <th style="width: 20%" scope="col">Expression</th>
+            <th style="width: 35%" scope="col">Reading</th>
+            <th style="width: 35%" scope="col">Meaning</th>
+            <th style="width: 10%" scope="col">JLPT</th>
+          </tr>
+        </thead>
+      </table>
+      {% for i in jlpt %}
+        <div class="collapse multi-collapse" id="collapse{{ i[0] }}">
+          <table class="table table-responsive" style="width: 100%">
+            <thead>
+              <tr>
+                <th style="width: 100%" colspan="4">{% if i[0] > 0 %}N{{ i[0] }}{% else %}NA{% endif %}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for j in range(words|length) %}
+                <tr>
+                  {% if words[j][3] == i[0] %}
+                    <td style="width: 20%" class="nowrap"><form action="/vocabulary" method="post"><input type="submit" name="vocabulary" value="{{ words[j][0] }}" class="btn btn-outline-dark text-nowrap"></form></td>
+                    <td style="width: 35%">{{ words[j][1] }}</td>
+                    <td style="width: 35%">{{ words[j][2] }}</td>
+                    {% if words[j][3] > 0 %}
+                      <td style="width: 10%">{{ words[j][3] }}</td>
+                    {% else %}
+                      <td style="width: 10%">NA</td>
+                    {% endif %}
+                  {% endif %}
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  <script>
+
+    window.addEventListener('load', (event) => {
+      document.getElementById('strokesbutton').removeAttribute('disabled');
+      document.getElementById('colorbutton').removeAttribute('disabled');
+      document.getElementById('jlptall').removeAttribute('disabled');
+      for (var j = 0; j < 6; j++) {
+        if (document.getElementById('jlpt' + j) == null) { continue; }
+        document.getElementById('jlpt' + j).removeAttribute('disabled');
+      }
+    });
+    
+  </script>
+{% endblock %}

@@ -1,0 +1,243 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  Study {{ syllabary }}
+{% endblock %}
+
+{% block head %}
+  Study {{ syllabary }}
+{% endblock %}
+
+{% block main %}
+  <meta id="syllabary" name="{{ syllabary }}">
+  <p class="text-center">
+    <button id="aboutkana" class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" disabled>
+      {{ syllabary }} information
+    </button>
+  </p>
+  <div class="collapse" id="collapseExample">
+    <div class="card card-body">
+      <p>
+        {{ syllabary }} consist of 5 vowels ({{ mono[0][0] }}, {{ mono[1][0] }}, {{ mono[2][0] }}, {{ mono[3][0] }}, {{ mono[4][0]}}),
+        1 consonant ({{ mono[52][0] }}), and of consonant-vowel pairs. The standard set of historically 50 syllables are also called
+        monographs.
+      </p>
+      <p>
+        If a dakuten (゛) or handakuten (゜)  is added to some of these monographs, they become diacritic monographs. Their sound
+        changes and is often softened in case of dakuten, or hardened in case of handakuten. If a {{ mono[35][0] }},
+        {{ mono[37][0] }} or {{ mono[39][0] }} is added to a monograph ending in i, a digraph is created, such as {{ di[0][0] }}
+        from {{ mono[6][0] }}. In these cases, the added monograph is written smaller. These digraphs can also be altered through
+        dakuten and handakuten.  Refer to the listen section for how these sounds change.
+      </p>
+      <p>
+        {% if syllabary == "Hiragana" %}An added vowel of the same type as in the prior consonant-vowel pair will lengthen the
+        sound.{% endif %}{% if syllabary == "Katakana" %}A cho-onpu (ー) will lengthen the sound of the previous vowel.
+        {% endif %} An {{ mono[2][0] }} followed after a consonant-vowel pair that ends in an o sound will also often result
+        in the sound being lengthened (for example {{ di[5][0] }}{{ mono[2][0]}}). The same applies to an {{ mono[1][0] }}
+        following an e sound (for example {{ mono[8][0] }}{{ mono[1][0] }}).
+      </p>
+      <p>
+        A sokuon {% if syllabary == "Hiragana" %}(っ){% endif %}{% if syllabary == "Katakana" %}(ッ){% endif %}, a small
+        {{ mono[17][0] }}, doubles the next consonant. {% if syllabary == "Hiragana" %}For example, bata (ばた) becomes batta
+        (ばった).{% endif %}{% if syllabary == "Katakana" %}For example, bata (バタ) becomes batta (バッタ).{% endif %} In the
+        case of the next consonant being an n, we use the {{ mono[52][0] }} instead. {% if syllabary == "Hiragana" %}For example,
+        かな becomes かんな.{% endif %}{% if syllabary == "Katakana" %}For example, カナ becomes カンナ.{% endif %} In this case,
+        the {{ mono[52][0] }} does not change in size.
+      </p>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <table class="table table-responsive table-bordered text-center" style="width: 30%">
+          <thead>
+            <tr>
+              <th colspan="5">Monographs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {% for i in range(mono|length) %}
+                {% if i %5 == 0%}
+                  </tr><tr>
+                {% endif %}
+                {% if mono[i][0] != "0" %}
+                  <td>
+                    <button id="mono{{ i }}" class="btn btn-sm btn-light toggle-buttons" onclick='getData("{{ mono[i][2] }}")' disabled>
+                      {{ mono[i][0] }}
+                    </button>
+                  </td>
+                {% else %}
+                  <td></td>
+                {% endif %}
+              {% endfor %}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col">
+        <table class="table table-responsive table-bordered text-center" style="width: 30%">
+          <thead>
+            <tr>
+              <th colspan="3">Digraphs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {% for i in range(di|length) %}
+                {% if i %3 == 0%}
+                  </tr><tr>
+                {% endif %}
+                {% if di[i][0] != "0" %}
+                  <td>
+                    <button id="di{{ i }}" class="btn btn-sm btn-light toggle-buttons" onclick='getData("{{ di[i][2] }}")' disabled>
+                      {{ di[i][0] }}
+                    </button>
+                  </td>
+                {% else %}
+                  <td></td>
+                {% endif %}
+              {% endfor %}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col">
+        <table class="table table-responsive table-bordered text-center" style="width: 30%">
+          <thead>
+            <tr>
+              <th colspan="5">Monograph Diacritics</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {% for i in range(monodia|length) %}
+                {% if i %5 == 0%}
+                  </tr><tr>
+                {% endif %}
+                {% if monodia[i][0] != "0" %}
+                  <td>
+                    <button id="monodia{{ i }}" class="btn btn-sm btn-light toggle-buttons" onclick='getData("{{ monodia[i][2] }}")' disabled>
+                      {{ monodia[i][0] }}
+                    </button>
+                  </td>
+                {% else %}
+                  <td></td>
+                {% endif %}
+              {% endfor %}
+            </tr>
+          </tbody>
+        </table>
+        <table class="table table-responsive table-bordered text-center" style="width: 30%">
+          <thead>
+            <tr>
+              <th colspan="3">Digraph Diacritics</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {% for i in range(didia|length) %}
+                {% if i %3 == 0%}
+                  </tr><tr>
+                {% endif %}
+                {% if didia[i][0] != "0" %}
+                  <td>
+                    <button id="didia{{ i }}" class="btn btn-sm btn-light toggle-buttons" onclick='getData("{{ didia[i][2] }}")' disabled>
+                      {{ didia[i][0] }}
+                    </button>
+                  </td>
+                {% else %}
+                  <td></td>
+                {% endif %}
+              {% endfor %}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-4">
+        <div class="card kana-card" style="width: 100%">
+          <div class="card-body">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item"><h5 id="cardtitle" class="card-title text-center" style="font-size: 10vw">{{ card[0] }}</h5></li>
+              <li class="list-group-item"><h6 class="floating-label">Romaji</h6><p id="cardroman" class="card-text text-center" style="font-size: 4vw">{{ card[1] }}</p></li>
+                <li class="list-group-item text-center"><h6 class="floating-label">Listen</h6><audio id="cardaudio" controls src="static/mp3/{{ card[2] }}.mp3" type="audio/mpeg"></audio></li>
+              <li class="list-group-item text-center">
+                <div class="d-grid gap-2 d-md-block">
+                  <button type="button" class="btn btn-outline-primary radical-button" id="previous" style="font-size: 2vw;" disabled>
+                    &larr;
+                  </button>
+                  <button type="button" class="btn btn-outline-primary radical-button" id="next" style="font-size: 2vw;" onclick="getData('1')" disabled>
+                    &rarr;
+                  </button>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+
+    window.addEventListener('load', (event) => {
+      loadButtons();
+    });
+
+    function loadButtons() {
+      for (var j = 0; j < 53; j++) {
+        if (document.getElementById('mono' + j) == null) { continue; }
+        document.getElementById('mono' + j).removeAttribute('disabled');
+      }
+
+      for (var k = 0; k < 21; k++) {
+        document.getElementById('di' + k).removeAttribute('disabled');
+      }
+
+      for (var l = 0; l < 25; l++) {
+        document.getElementById('monodia' + l).removeAttribute('disabled');
+      }
+
+      for (var m = 0; m < 15; m++) {
+        document.getElementById('didia' + m).removeAttribute('disabled');
+      }
+
+      document.getElementById('next').removeAttribute('disabled');
+      document.getElementById('aboutkana').removeAttribute('disabled');
+    }
+
+    function getData(cardNo) {
+      let url = "/kana_study";
+      let data = { "number": cardNo, "style": "{{ syllabary }}" };
+      fetch(url, {
+        "method": "POST",
+        "headers": {"Content-Type": "application/json"},
+        "body": JSON.stringify(data),
+      }).then(response => response.json())
+      .then(data => {
+        console.log(data);
+        document.getElementById('cardtitle').innerHTML = data["kana"];
+        document.getElementById('cardroman').innerHTML = data["romaji"];
+        document.getElementById('cardaudio').setAttribute('src', data["audio"]);
+        if (data["number"] == "0") {
+          document.getElementById('previous').setAttribute('disabled', '');
+        }
+        else {
+          document.getElementById('previous').removeAttribute('disabled');
+          document.getElementById('previous').setAttribute('onclick', data["previous"]);
+        }
+
+        if (data["number"] == "106") {
+          document.getElementById('next').setAttribute('disabled', '');
+        }
+        else {
+          document.getElementById('next').removeAttribute('disabled');
+          document.getElementById('next').setAttribute('onclick', data["next"]);
+        }
+
+      })
+
+      .catch((err) => console.log("Access failed: " + url + " Reason: " + err));
+    }
+
+  </script>
+{% endblock %}

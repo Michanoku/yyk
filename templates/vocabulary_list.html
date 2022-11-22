@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  Vocabulary list
+{% endblock %}
+
+{% block head %}
+  Vocabulary
+{% endblock %}
+
+{% block main %}
+  <div class="text-center">
+    Sort by:&nbsp;
+    <div class="btn-group btn-group-toggle" data-toggle="buttons" role="group" aria-label="Basic outlined example">
+      <button onclick="toggleKana()" id="kanabutton"data-toggle="button" class="btn toggle-buttons btn-sm btn-outline-secondary text-nowrap" aria-pressed="false" disabled>
+        Kana
+      </button>
+      <button onclick="toggleVocabJlpt()" id="jlptbutton" data-toggle="button" class="btn toggle-buttons btn-sm btn-outline-secondary text-nowrap" aria-pressed="false" disabled>
+        JLPT
+      </button>
+    </div>
+  </div>
+  <div class="container-fluid" id="sorted_kana">
+    <table class="table table-responsive table-hover w-75 m-auto">
+      <thead>
+        <tr>
+          <th scope="col">Expression</th>
+          <th scope="col">Reading</th>
+          <th scope="col">Meaning</th>
+          <th scope="col">JLPT</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for word in kana %}
+          <tr>
+            <td class="nowrap">
+              <form action="/vocabulary" method="post"><input type="submit" name="vocabulary" value="{{ word[0] }}" class="btn btn-outline-dark btn-sm"></form>
+            </td>
+            <td>{{ word[1] }}</td>
+            <td>{{ word[2] }}</td>
+            <td>{% if word[3] > 0 %}N{{ word[3] }}{% else %}NA{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="container-fluid" id="sorted_jlpt">
+    <table class="table table-responsive table-hover w-75 m-auto">
+      <thead>
+        <tr>
+          <th scope="col">Expression</th>
+          <th scope="col">Reading</th>
+          <th scope="col">Meaning</th>
+         <th scope="col">JLPT</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for word in jlpt %}
+          <tr>
+            <td class="nowrap">
+              <form action="/vocabulary" method="post"><input type="submit" name="vocabulary" value="{{ word[0] }}" class="btn btn-outline-dark btn-sm"></form>
+            </td>
+            <td>{{ word[1] }}</td>
+            <td>{{ word[2] }}</td>
+            <td>{% if word[3] > 0 %}N{{ word[3] }}{% else %}NA{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <script>
+
+    window.addEventListener('load', (event) => {
+      document.getElementById('kanabutton').removeAttribute('disabled');
+      document.getElementById('jlptbutton').removeAttribute('disabled');
+    });
+
+  </script>
+{% endblock %}

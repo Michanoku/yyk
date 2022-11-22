@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  Study
+{% endblock %}
+
+{% block head %}
+  Study
+{% endblock %}
+
+{% block main %}
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-md-auto text-center">
+        <div class="card" style="width: 25vw;">
+          <img class="card-img-top center" src="static/img/kanji.jpg" style="width: 24vw; height: 15vw" alt="Japanese for kanji">
+          <div class="card-body">
+            <h5 class="card-title">New kanji</h5>
+            <p class="card-text">
+              {% if kanjistudy == "yes" %}
+                There are new kanji to study.
+              {% else %}
+                No new kanji for now.
+              {% endif %}
+              {% if wordstudy == "yes" %}
+                There are new words remaining.
+              {% elif wordstudy == "no" and words == "yes" %}
+                There are new words remaining in the next session.
+              {% endif %}
+            </p>
+            {% if kanjistudy == "yes" %}
+              <a href="/study_kanji" class="btn btn-lg btn-outline-primary">Study</a>
+            {% else %}
+              <button class="btn btn-lg btn-outline-secondary" disabled>Study</button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-auto text-center">
+        <div class="card" style="width: 25vw;">
+          <img class="card-img-top center" src="static/img/vocabulary.jpg" style="width: 24vw; height: 15vw" alt="Japanese for vocabulary">
+          <div class="card-body">
+            <h5 class="card-title">New words</h5>
+            <p class="card-text">
+              {% if wordstudy == "yes" %}
+                There are new words to study.
+              {% elif wordstudy == "no" and words == "yes" %}
+                No new words for now. There are new words remaining in the next session.
+              {% else %}
+                No new words for now.
+              {% endif %}
+              {%if kanjistudy == "yes" %}
+                Please study remaining new kanji first.
+              {% endif %}
+            </p>
+            {% if wordstudy == "yes" %}
+              <a href="/study_words" class="btn btn-lg btn-outline-primary">Study</a>
+            {% else %}
+              <button class="btn btn-lg btn-outline-secondary" disabled>Study</button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-auto text-center">
+        <div class="card" style="width: 25vw;">
+          <img class="card-img-top center" src="static/img/kana.jpg" style="width: 24vw; height: 15vw" alt="Japanese for hiragana a and katakana a">
+          <div class="card-body">
+            <h5 class="card-title">Kana words</h5>
+            <p class="card-text">Words that only consist of kana.</p>
+            <a href="/study_kana" class="btn btn-lg btn-outline-primary">Study</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
